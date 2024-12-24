@@ -1,0 +1,250 @@
+---
+title: "Research on the dynamics of the Australian energy market"
+subtitle: "Regional, Temporal, and Demand Dynamics Shaping the Market"
+author: "Yao Jin"
+format: 
+  closeread-html:
+    cr-style:
+      narrative-text-color-sidebar: black
+      narrative-background-color-overlay: grey
+      narrative-background-color-sidebar: white
+      section-background-color: white
+    css: styles.css
+---
+
+Australian energy markets exhibit fascinating and complex patterns influenced by time, region, demand and import/export trade. Analysis of these dynamics, based on data from 2018 to 2019, to uncover the patterns can provide important insights for policymakers, businesses and consumers to optimize energy use and manage costs.
+
+::::::::::: cr-section
+### Temporal Volatility in Energy Prices
+
+Energy prices across Australian states are subject to temporal fluctuations. @cr-plot1
+
+Monthly trends reveal seasonal peaks in energy costs, for example **NSW** and **VIC** experience significant **price spikes in January and July**, likely due to seasonal heating and cooling demands. Meanwhile, **QLD** sees a **notable peak in December**. @cr-plot1
+
+```{r}
+#| echo: FALSE
+#| message: FALSE 
+#| warning: FALSE
+library(tidyverse)
+library(ggplot2)
+library(here)
+library(dplyr)
+library(ggthemes)
+library(gganimate)
+library(gifski)
+library(png)
+energydata=read_csv("data/energydata.csv")
+```
+
+::: {#cr-plot1}
+```{r}
+#| echo: FALSE
+#| message: FALSE 
+#| warning: FALSE
+energydata_date=energydata|>
+  mutate(Date = dmy(Date), days=day(Date),months=month(Date),
+         years=year(Date))
+plot1 = energydata_date|>
+  group_by(State,months)|>
+  summarise(avgprice=mean(Price,na.rm = TRUE))|>
+ggplot()+
+  aes(x=months,y=avgprice,group=State,color=State)+
+  geom_point(size=1.8)+
+  geom_line(size=1,alpha=0.6)+
+  theme_bw()+
+  scale_x_discrete(limits=c(2,4,6,8,10,12))+
+  ggtitle("Monthly Energy Price Trends")+
+  xlab("Month")+
+  ylab("Energy Price")+
+  scale_color_colorblind()+
+  transition_reveal(months)
+plot1
+```
+:::
+
+Weekly patterns further highlight price variations, with **weekdays** generally exhibiting **higher** prices than **weekends**. These temporal variations underscore the need for strategic planning in energy consumption. @cr-plot2
+
+::: {#cr-plot2}
+```{r}
+#| echo: FALSE
+#| message: FALSE 
+#| warning: FALSE
+average_price_day=energydata|>
+  group_by(Day)|>
+  summarise(AveragePrice=mean(Price,na.rm = TRUE,))
+plot2=ggplot(average_price_day,aes(x=Day,y=AveragePrice,group = 1))+
+  geom_line(color="pink",size=1.3)+
+  geom_point(color="black")+
+  theme_classic()+
+  scale_x_discrete(limits=c("Mon","Tue","Wed","Thu","Fri","Sat","Sun"))+
+  ggtitle("Average of Weekly Energy Price")+
+  xlab("Day of the Week")+
+  ylab("Energy Price")
+plot2
+```
+:::
+
+### Regional Disparities in Pricing
+
+Energy costs are not uniform across states. @cr-plot3
+
+**VIC** consistently records the **highest average energy prices**, while **QLD** boasts the **lowest**. @cr-plot3
+
+This disparity reflects regional factors such as infrastructure costs, local energy policies, and supply chain dynamics. Such insights emphasize the importance of tailored regional strategies to manage energy affordability and efficiency. @cr-plot3
+
+::: {#cr-plot3}
+```{r}
+#| echo: FALSE
+#| message: FALSE 
+#| warning: FALSE
+averageprice=energydata|>
+  group_by(State)|>
+  summarise(AveragePrice=mean(Price,na.rm = TRUE))
+plot3=ggplot(data = averageprice,
+       aes(x=State,y=AveragePrice,fill = State))+
+  geom_bar(stat = "identity")+
+  theme_bw()+
+  ggtitle("Average Energy Price of 5 States")+
+  ylab("Energy Price")
+plot3
+```
+:::
+
+### Price-Demand Relationships
+
+Examining the relationship between price and demand reveals unique regional patterns. @cr-plot4
+
+For instance, **NSW** shows a **positive correlation**, where higher prices align with higher demand, likely reflecting economic activities. @cr-plot4
+
+In contrast, **TAS** presents a **weaker correlation**, suggesting other factors, like renewable energy contributions, play a more significant role. @cr-plot4
+
+::: {#cr-plot4}
+```{r}
+#| echo: FALSE
+#| message: FALSE 
+#| warning: FALSE
+plot4 = ggplot(energydata_date, aes(x = Demand, y = Price, color = State))+
+  geom_point(alpha=0.4)+
+  geom_smooth(method = "lm", se = FALSE)+
+  theme_bw()+
+  ggtitle("Price vs. Demand Correlation by State")+
+  xlab("Energy Demand")+
+  ylab("Energy Price")+
+  facet_wrap(~State, scales = "free")+
+  theme(legend.position = "none")+
+  scale_color_colorblind()+
+  transition_time(years)
+plot4
+```
+:::
+
+### Demand Variations Across Time and Regions
+
+Energy demand patterns differ significantly between states and seasons. @cr-plot5
+
+**NSW** and **QLD** account for the **bulk of total energy demand**, with **NSW** peaking in **winter** and **QLD** maintaining **steadier** demand year-round. @cr-plot5
+
+Such variability highlights the importance of analysing state-specific trends to ensure effective energy distribution and storage strategies. @cr-plot5
+
+::: {#cr-plot5}
+```{r}
+#| echo: FALSE
+#| message: FALSE 
+#| warning: FALSE
+data3=energydata_date|>
+  mutate(season = case_when(
+    months %in% c(12, 1, 2) ~ "Summer",
+    months %in% c(6,7,8) ~ "Winter",
+    TRUE ~ "Other"))
+data4=data3|>
+  group_by(State, season)|>
+  summarize(avg_demand = mean(Demand, na.rm = TRUE))
+plot5 = ggplot(data4,aes(x=season, y=avg_demand,fill = State))+
+  geom_bar(stat = "identity",position = "dodge")+
+  theme_bw()+
+  ggtitle("Energy Demand Trends by State and Season")+
+  xlab("Season")+
+  ylab("Average Demand")+
+  scale_color_colorblind()
+plot5
+```
+:::
+
+### Net Export and Trade Balances
+
+The net export of energy paints a diverse picture of trade balances among states. @cr-plot6
+
+**NSW** and **VIC** have relatively symmetrical distributions centered around zero, suggesting **balanced trade**. In contrast, **QLD** and **SA** show a skew towards negative net exports, indicating a tendency towards **higher imports than exports**. @cr-plot6
+
+::: {focus-on="cr-plot6" pan-to="-50%,0%" scale-by="2.4"}
+**TAS** has a bimodal distribution, indicating **variability in trade balances** with peaks at both negative and positive net export values.
+:::
+
+::: {#cr-plot6}
+```{r}
+#| echo: FALSE
+#| message: FALSE 
+#| warning: FALSE
+plot6 = ggplot(energydata,aes(x=NetExport))+
+  geom_histogram(aes(y=..density..),alpha=0.4,col="grey",bins = 30)+
+  geom_density(col="yellow",adjust=1.2,size=1.1)+
+  geom_vline(aes(xintercept = mean(NetExport)),col="blue",linetype="dotted",size=1.1)+
+  facet_wrap(~State,ncol = 2)+
+  theme_bw()+
+  ggtitle("Distribution of Net Export by State")
+plot6
+```
+:::
+
+The relationship between demand and net exports further underscores regional differences, with **NSW** and **VIC** exhibiting a **negative correlation**, where higher demand leads to reduced net exports, likely due to increased local consumption. @cr-plot7
+
+::: {#cr-plot7}
+```{r}
+#| echo: FALSE
+#| message: FALSE 
+#| warning: FALSE
+plot7 = ggplot(energydata_date,aes(x=NetExport,y=Demand,color=State))+
+  geom_point(alpha=0.4)+
+  geom_smooth(method = "lm",se=FALSE)+
+  theme_bw()+
+  ggtitle("Net Export vs. Demand Correlation by State")+
+  xlab("Net Export")+
+  ylab("Energy Damand")+
+  facet_wrap(~State, scales = "free")+
+  theme(legend.position = "none")+
+  scale_color_colorblind()+
+  transition_time(years)
+plot7
+```
+:::
+:::::::::::
+
+## Implications of this research in the long term:
+
+The intricacies of price, region, demand and imports/exports in Australia's energy markets Identifying these trends can give stakeholders a powerful aid to policy and business strategy.
+
+For example, energy storage and distribution can be optimized to meet different demand patterns. Consider regional differences and develop targeted pricing models. Invest in infrastructure and renewable resources to stabilize prices and improve sustainability.
+
+This analysis paves the way for a resilient and efficient energy future, balancing economic, environmental and social needs across Australia.
+
+Translated with DeepL.com (free version)
+
+## Citation
+
+-   Wickham, H., Averick, M., Bryan, J., Chang, W., D’Agostino McGowan, L., François, R., … & Woo, K. (2019). tidyverse: Easily install and load ‘tidyverse’ packages. Journal of Open Source Software, 4(43), 1686. <https://doi.org/10.21105/joss.01686>
+
+-   Wickham, H. (2016). ggplot2: Elegant graphics for data analysis. Springer-Verlag New York. <https://doi.org/10.1007/978-3-319-24277-4>
+
+-   Müller, K. (2020). here: A simpler way to find your files. (R package version 1.0.1). <https://CRAN.R-project.org/package=here>
+
+-   Wickham, H., François, R., Henry, L., Müller, K., & Vaughan, D. (2023). dplyr: A grammar of data manipulation. (R package version 1.1.4). <https://CRAN.R-project.org/package=dplyr>
+
+-   Arnold, J. B. (2024). ggthemes: Extra themes, scales and geoms for ‘ggplot2’. (R package version 5.1.0). <https://CRAN.R-project.org/package=ggthemes>
+
+-   Pedersen T, Robinson D (2024). \_gganimate: A Grammar of Animated Graphics\_. (R package version 1.0.9). <https://CRAN.R-project.org/package=gganimate>
+
+-   Ooms J, Kornel Lesiński, Authors of the dependency Rust crates (2024). \_gifski: Highest Quality GIF Encoder\_. (R package version 1.32.0-1). <https://CRAN.R-project.org/package=gifski>
+
+-   Urbanek S (2022). \_png: Read and write PNG images\_. (R package version 0.1-8). <https://CRAN.R-project.org/package=png>
+
+-   Data: energydata.csv
