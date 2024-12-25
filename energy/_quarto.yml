@@ -1,0 +1,8 @@
+project:
+  type: website
+
+website:
+  title: "Australia Energy Market"
+  navbar:
+    left:
+      - href: index.qmd

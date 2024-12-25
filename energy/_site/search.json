@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Research on the dynamics of the Australian energy market",
+    "section": "",
+    "text": "Australian energy markets exhibit fascinating and complex patterns influenced by time, region, demand and import/export trade. Analysis of these dynamics, based on data from 2018 to 2019, to uncover the patterns can provide important insights for policymakers, businesses and consumers to optimize energy use and manage costs."
+  },
+  {
+    "objectID": "index.html#implications-of-this-research-in-the-long-term",
+    "href": "index.html#implications-of-this-research-in-the-long-term",
+    "title": "Research on the dynamics of the Australian energy market",
+    "section": "Implications of this research in the long term:",
+    "text": "Implications of this research in the long term:\nThe intricacies of price, region, demand and imports/exports in Australia’s energy markets Identifying these trends can give stakeholders a powerful aid to policy and business strategy.\nFor example, energy storage and distribution can be optimized to meet different demand patterns. Consider regional differences and develop targeted pricing models. Invest in infrastructure and renewable resources to stabilize prices and improve sustainability.\nThis analysis paves the way for a resilient and efficient energy future, balancing economic, environmental and social needs across Australia.\nTranslated with DeepL.com (free version)"
+  },
+  {
+    "objectID": "index.html#citation",
+    "href": "index.html#citation",
+    "title": "Research on the dynamics of the Australian energy market",
+    "section": "Citation",
+    "text": "Citation\n\nWickham, H., Averick, M., Bryan, J., Chang, W., D’Agostino McGowan, L., François, R., … & Woo, K. (2019). tidyverse: Easily install and load ‘tidyverse’ packages. Journal of Open Source Software, 4(43), 1686. https://doi.org/10.21105/joss.01686\nWickham, H. (2016). ggplot2: Elegant graphics for data analysis. Springer-Verlag New York. https://doi.org/10.1007/978-3-319-24277-4\nMüller, K. (2020). here: A simpler way to find your files. (R package version 1.0.1). https://CRAN.R-project.org/package=here\nWickham, H., François, R., Henry, L., Müller, K., & Vaughan, D. (2023). dplyr: A grammar of data manipulation. (R package version 1.1.4). https://CRAN.R-project.org/package=dplyr\nArnold, J. B. (2024). ggthemes: Extra themes, scales and geoms for ‘ggplot2’. (R package version 5.1.0). https://CRAN.R-project.org/package=ggthemes\nPedersen T, Robinson D (2024). _gganimate: A Grammar of Animated Graphics_. (R package version 1.0.9). https://CRAN.R-project.org/package=gganimate\nOoms J, Kornel Lesiński, Authors of the dependency Rust crates (2024). _gifski: Highest Quality GIF Encoder_. (R package version 1.32.0-1). https://CRAN.R-project.org/package=gifski\nUrbanek S (2022). _png: Read and write PNG images_. (R package version 0.1-8). https://CRAN.R-project.org/package=png\nData: energydata.csv"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  }
+]
